@@ -58,9 +58,34 @@
 </script>
 
 <style>
-	div{
+	body{
+		font-family: Helvetica;
+	}
+	
+	p{
+		font-size: 32px;
+		margin-bottom: 5px;
+	}
+
+
+	.header{
 		position: fixed;
-		top: 50%;
+		margin-left: 45%;
+		color: rgb(197, 117, 21);
+	}
+
+
+
+	.content{
+		position: fixed;
+		margin-left: 30%;
+		top: 25%;
+		color: rgb(182, 69, 47);
+	}
+
+	.table{
+		position: fixed;
+		top: 55%;
 		left: 40%;
 		margin-top: -50px;
   		margin-left: -100px;
@@ -72,7 +97,23 @@
 
 <body onload="clear_all()">
 
-<div>
+<div class="header">
+	<p>Jumble Pass</p>
+	<i>Simple Password Management</i>
+</div>
+
+
+<div class="content">
+	<ul>
+		<li>Enter a strong passphrase; preferably one that is easy to recollect</li>
+		<li>Enter a keyword for each password you wish to generate</li>
+		<li>Generate as many unique passwords you wish</li>
+		<li>Retrieve the passwords anytime again you need</li>
+		<li>In case you are worried, the passwords are all generated in the browser. They are generated on the fly, not saved anywhere</li>
+	</ul>
+</div>
+
+<div class="table">
 	<table border=0>
 	<tr><th>Passphrase: </th><td><input type="password" size="60" name="pw_phrase" id="pw_phrase" style="margin-right: 1em; margin-left: 1em;" onkeyup="pw_strength()" />
 	<th>Strength: </th><td><input tpye="text" size="10" name="strength" id="strength" style="font-weight: bold; margin-left: 1em;" readonly/></td></tr>
