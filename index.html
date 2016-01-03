@@ -13,7 +13,7 @@
 	    var pw = document.getElementById("pw"+n);
 	    var strength = document.getElementById("strength");
 	    var hmacObj = new jsSHA(pw_phrase.value, "TEXT");
-	    pw.value = hmacObj.getHMAC(keyword.value, "TEXT", "SHA-512", "B64").substring(5,15);
+	    pw.value = hmacObj.getHMAC(keyword.value, "TEXT", "SHA-512", "B64").substring(20,43);
 	    if (pw.value.search('!') === -1) pw.value = pw.value + '!'
 	    if (pw.value.search(/[0-9]/) === -1) pw.value = pw.value + '0'
 	  } catch(e) {
@@ -123,11 +123,11 @@
 	</table>
 	<table border=0>
 	<tr><th>Keyword</th><th>Password</th></tr>
-	<tr><td><input type="text" size="30" name="keyword1" id="keyword1" value="gmail" onkeyup="calc_pw(1)" /></td><td><input type="text" size="30" name="pw1" id="pw1" style="margin-left: 1em;" readonly /></td></tr>
-	<tr><td><input type="text" size="30" name="keyword2" id="keyword2" value="gmail" onkeyup="calc_pw(2)" /></td><td><input type="text" size="30" name="pw2" id="pw2" style="margin-left: 1em;" readonly /></td></tr>
-	<tr><td><input type="text" size="30" name="keyword3" id="keyword3" value="gmail" onkeyup="calc_pw(3)" /></td><td><input type="text" size="30" name="pw3" id="pw3" style="margin-left: 1em;" readonly /></td></tr>
-	<tr><td><input type="text" size="30" name="keyword4" id="keyword4" value="gmail" onkeyup="calc_pw(4)" /></td><td><input type="text" size="30" name="pw4" id="pw4" style="margin-left: 1em;" readonly /></td></tr>
-	<tr><td><input type="text" size="30" name="keyword5" id="keyword5" value="gmail" onkeyup="calc_pw(5)" /></td><td><input type="text" size="30" name="pw5" id="pw5" style="margin-left: 1em;" readonly /></td></tr>
+	<tr><td><input type="text" size="30" name="keyword1" id="keyword1" value="gmail" onkeyup="calc_pw(1)" /></td><td><input type="text" size="60" name="pw1" id="pw1" style="margin-left: 1em;"  /></td></tr>
+	<tr><td><input type="text" size="30" name="keyword2" id="keyword2" value="gmail" onkeyup="calc_pw(2)" /></td><td><input type="text" size="60" name="pw2" id="pw2" style="margin-left: 1em;"  /></td></tr>
+	<tr><td><input type="text" size="30" name="keyword3" id="keyword3" value="gmail" onkeyup="calc_pw(3)" /></td><td><input type="text" size="60" name="pw3" id="pw3" style="margin-left: 1em;"  /></td></tr>
+	<tr><td><input type="text" size="30" name="keyword4" id="keyword4" value="gmail" onkeyup="calc_pw(4)" /></td><td><input type="text" size="60" name="pw4" id="pw4" style="margin-left: 1em;"  /></td></tr>
+	<tr><td><input type="text" size="30" name="keyword5" id="keyword5" value="gmail" onkeyup="calc_pw(5)" /></td><td><input type="text" size="60" name="pw5" id="pw5" style="margin-left: 1em;"  /></td></tr>
 	</table>
 
 </div>
