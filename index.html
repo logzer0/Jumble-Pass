@@ -1,137 +1,257 @@
+<!doctype html>
 <html>
 <head>
-<title>Password Manager</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width,initial-scale=1.0" name="viewport">
+    <title>Password Manager</title>
+    <script type="text/javascript" src="src/sha512.js"></script>
+    <script type="text/javascript" src="src/zxcvbn.js"></script>
+    <script type="text/javascript">
+        function calc_pw(n) {
+            try {
+                var pw_phrase = document.getElementById("pw_phrase");
+                var keyword = document.getElementById("keyword" + n);
+                var pw = document.getElementById("pw" + n);
+                var strength = document.getElementById("strength");
+                var hmacObj = new jsSHA(pw_phrase.value, "TEXT");
+                pw.value = hmacObj.getHMAC(keyword.value, "TEXT", "SHA-512", "B64").substring(20, 43);
+                if (pw.value.search('!') === -1) pw.value = pw.value + '!'
+                if (pw.value.search(/[0-9]/) === -1) pw.value = pw.value + '0'
+            } catch (e) {
+                pw.value = "ERROR: " + e;
+            }
+        }
 
-<script type="text/javascript" src="src/sha512.js"></script>
-<script type="text/javascript" src="src/zxcvbn.js"></script>
+        function pw_strength() {
+            var pw_phrase = document.getElementById("pw_phrase");
+            var score = zxcvbn(pw_phrase.value).score;
+            if (score == '0') {
+                strength.value = 'Very Weak';
+                strength.style.color = 'red';
+            } else if (score == '1') {
+                strength.value = 'Weak';
+                strength.style.color = 'red';
+            } else if (score == '2') {
+                strength.value = 'So so';
+                strength.style.color = 'orange';
+            } else if (score == '3') {
+                strength.value = 'Okay';
+                strength.style.color = 'blue';
+            } else if (score == '4') {
+                strength.value = 'Strong';
+                strength.style.color = 'green';
+            } else strength.value = '';
+        }
 
-<script type="text/javascript">
-    function calc_pw(n) {
-	  try {
-	    var pw_phrase = document.getElementById("pw_phrase");
-	    var keyword = document.getElementById("keyword"+n);
-	    var pw = document.getElementById("pw"+n);
-	    var strength = document.getElementById("strength");
-	    var hmacObj = new jsSHA(pw_phrase.value, "TEXT");
-	    pw.value = hmacObj.getHMAC(keyword.value, "TEXT", "SHA-512", "B64").substring(20,43);
-	    if (pw.value.search('!') === -1) pw.value = pw.value + '!'
-	    if (pw.value.search(/[0-9]/) === -1) pw.value = pw.value + '0'
-	  } catch(e) {
-	    pw.value = "ERROR: " + e;
-	  }
-	}
-	function pw_strength() {
-	    var pw_phrase = document.getElementById("pw_phrase");
-	    var score = zxcvbn(pw_phrase.value).score;
-	    if (score == '0') {strength.value = 'Very Weak'; strength.style.color = 'red'; }
-	    else if (score == '1') {strength.value = 'Weak'; strength.style.color = 'red'; }
-	    else if (score == '2') {strength.value = 'So so'; strength.style.color = 'orange'; }
-	    else if (score == '3') {strength.value = 'Okay'; strength.style.color = 'blue'; }
-	    else if (score == '4') {strength.value = 'Strong'; strength.style.color = 'green'; }
-	    else strength.value = '';
-	}
-	function check_pw2_same() {
-	  var pw_phrase = document.getElementById("pw_phrase");
-	  var pw_phrase2 = document.getElementById("pw_phrase2");
-	  var pw_same = document.getElementById("pw_same");
-	  if (pw_phrase.value === pw_phrase2.value)
-	    pw_same.value = 'Correct';
-	  else
-	    pw_same.value = 'Incorrect';
-	}
-	function clear_all() {
-	  document.getElementById("pw_phrase").value = '';
-	  document.getElementById("pw_phrase2").value = '';
-	  document.getElementById("strength").value = '';
-	  document.getElementById("pw_same").value = '';
-	  document.getElementById("keyword1").value = 'github';
-	  document.getElementById("keyword2").value = 'gmail';
-	  document.getElementById("keyword3").value = 'yahoo';
-	  document.getElementById("keyword4").value = 'bofa';
-	  document.getElementById("keyword5").value = 'kickstarter';
-	  document.getElementById("pw1").value = '';
-	  document.getElementById("pw2").value = '';
-	  document.getElementById("pw3").value = '';
-	  document.getElementById("pw4").value = '';
-	  document.getElementById("pw5").value = '';
-	}
-</script>
+        function check_pw2_same() {
+            var pw_phrase = document.getElementById("pw_phrase");
+            var pw_phrase2 = document.getElementById("pw_phrase2");
+            var pw_same = document.getElementById("pw_same");
+            if (pw_phrase.value === pw_phrase2.value)
+                pw_same.value = 'Correct';
+            else
+                pw_same.value = 'Incorrect';
+        }
 
-<style>
-	body{
-		font-family: Helvetica;
-	}
-	
-	p{
-		font-size: 32px;
-		margin-bottom: 5px;
-	}
-
-
-	.header{
-		position: fixed;
-		margin-left: 40%;
-		color: rgb(197, 117, 21);
-	}
-
-
-
-	.content{
-		position: fixed;
-		margin-left: 25%;
-		top: 25%;
-		color: rgb(182, 69, 47);
-	}
-
-	.table{
-		position: fixed;
-		top: 55%;
-		left: 35%;
-		margin-top: -50px;
-  		margin-left: -100px;
-  		background-color: #C8C8C8;
-	}
-</style>
-
+        function clear_all() {
+            document.getElementById("pw_phrase").value = '';
+            document.getElementById("pw_phrase2").value = '';
+            document.getElementById("strength").value = '';
+            document.getElementById("pw_same").value = '';
+            document.getElementById("keyword1").value = 'github';
+            document.getElementById("keyword2").value = 'gmail';
+            document.getElementById("keyword3").value = 'yahoo';
+            document.getElementById("keyword4").value = 'bofa';
+            document.getElementById("keyword5").value = 'kickstarter';
+            document.getElementById("pw1").value = '';
+            document.getElementById("pw2").value = '';
+            document.getElementById("pw3").value = '';
+            document.getElementById("pw4").value = '';
+            document.getElementById("pw5").value = '';
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            max-height: 1000000px;
+            box-sizing: border-box;
+        }
+        *:before, *:after {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Helvetica;
+            min-width: 320px;
+        }        
+        p {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }  
+        .wrapper{
+            max-width: 770px;
+            margin: 0 auto;
+            padding: 30px 10px;
+        }      
+        .header {
+            overflow: hidden;
+            text-align: center;
+            padding: 0 0 50px;
+            color: rgb(197, 117, 21);
+        }        
+        .content {
+            overflow: hidden;
+            margin-bottom: 30px;
+            color: rgb(182, 69, 47);
+        }  
+        .content ul{
+            padding: 0 0 0 20px;
+            margin: 0;
+            overflow: hidden;
+        }      
+        .table {
+            background-color: #C8C8C8;
+            padding: 15px;
+            position: relative;
+        }
+        .table table{
+            width: 100%;
+        }
+        .table table th,
+        .table table td{
+            padding:1px 2px;
+        }
+        input[type=text],
+        input[type=email],
+        input[type=password]{
+            border:1px solid rgba(0,0,0,0.4);
+            background-color: #fff;
+            padding:4px 5px 6px;
+            transition: all 0.2s ease;
+            -webkit-transition: all 0.2s ease;
+            width: 100%;
+            margin: 0;
+        }
+        input[type=text]:focus,
+        input[type=email]:focus,
+        input[type=password]:focus{
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.4);
+        }
+        @media (max-width: 767px){
+            .table table th,
+            .table table td{
+                padding:1px 2px;
+                display: block;
+            }
+        }
+        @media (max-width: 550px){
+            .top-banner img{
+                width: 100px;
+                height: 100px;
+            }
+            p {
+                font-size: 25px;
+                margin-bottom: 5px;
+            }
+            ul{
+                font-size: 15px;
+            }
+            .header {
+                padding: 0 0 30px;
+            } 
+        }
+    </style>
 </head>
-
 <body onload="clear_all()">
-<a href="https://github.com/arelangi/Jumble-Pass"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
-
-<div class="header">
-	<p>Jumble Pass</p>
-	<i>Simple Password Management</i>
-</div>
-
-
-<div class="content">
-	<ul>
-		<li>Enter a strong passphrase; preferably one that is easy to recollect</li>
-		<li>Enter a keyword for each password you wish to generate</li>
-		<li>Generate as many unique passwords you wish</li>
-		<li>Retrieve the passwords anytime again you need</li>
-		<li>In case you are worried, the passwords are all generated in the browser. They are generated on the fly, not saved anywhere</li>
-	</ul>
-</div>
-
-<div class="table">
-	<table border=0>
-	<tr><th>Passphrase: </th><td><input type="password" size="60" name="pw_phrase" id="pw_phrase" style="margin-right: 1em; margin-left: 1em;" onkeyup="pw_strength()" />
-	<th>Strength: </th><td><input tpye="text" size="10" name="strength" id="strength" style="font-weight: bold; margin-left: 1em;" readonly/></td></tr>
-	<tr><th>Verify: </th><td><input type="password" size="60" name="pw_phrase2" id="pw_phrase2" style="margin-right: 1em; margin-left: 1em;" onkeyup="check_pw2_same()" />
-	<th>Correct: </th><td><input tpye="text" size="10" name="pw_same" id="pw_same" style="font-weight: bold; margin-left: 1em;" readonly/></td></tr>
-	</table>
-	<table border=0>
-	<tr><th>Keyword</th><th>Password</th></tr>
-	<tr><td><input type="text" size="30" name="keyword1" id="keyword1" value="gmail" onkeyup="calc_pw(1)" /></td><td><input type="text" size="60" name="pw1" id="pw1" style="margin-left: 1em;"  /></td></tr>
-	<tr><td><input type="text" size="30" name="keyword2" id="keyword2" value="gmail" onkeyup="calc_pw(2)" /></td><td><input type="text" size="60" name="pw2" id="pw2" style="margin-left: 1em;"  /></td></tr>
-	<tr><td><input type="text" size="30" name="keyword3" id="keyword3" value="gmail" onkeyup="calc_pw(3)" /></td><td><input type="text" size="60" name="pw3" id="pw3" style="margin-left: 1em;"  /></td></tr>
-	<tr><td><input type="text" size="30" name="keyword4" id="keyword4" value="gmail" onkeyup="calc_pw(4)" /></td><td><input type="text" size="60" name="pw4" id="pw4" style="margin-left: 1em;"  /></td></tr>
-	<tr><td><input type="text" size="30" name="keyword5" id="keyword5" value="gmail" onkeyup="calc_pw(5)" /></td><td><input type="text" size="60" name="pw5" id="pw5" style="margin-left: 1em;"  /></td></tr>
-	</table>
-
-</div>
-
+    <a class="top-banner" href="https://github.com/arelangi/Jumble-Pass"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
+    <div class="wrapper">
+        <div class="header">
+            <p>Jumble Pass</p>
+            <i>Simple Password Management</i>
+        </div>
+        <div class="content">
+            <ul>
+                <li>Enter a strong passphrase; preferably one that is easy to recollect</li>
+                <li>Enter a keyword for each password you wish to generate</li>
+                <li>Generate as many unique passwords you wish</li>
+                <li>Retrieve the passwords anytime again you need</li>
+                <li>In case you are worried, the passwords are all generated in the browser. They are generated on the fly, not saved anywhere</li>
+            </ul>
+        </div>
+        <div class="table">
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Passphrase: </th>
+                        <td>
+                            <input type="password" size="60" name="pw_phrase" id="pw_phrase" onkeyup="pw_strength()" />
+                        </td>    
+                        <th>Strength: </th>
+                        <td>
+                            <input type="text" size="10" name="strength" id="strength" style="font-weight: bold;" readonly/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Verify: </th>
+                        <td>
+                            <input type="password" size="60" name="pw_phrase2" id="pw_phrase2" onkeyup="check_pw2_same()" />
+                        </td>    
+                        <th>Correct: </th>
+                        <td>
+                            <input type="text" size="10" name="pw_same" id="pw_same" style="font-weight: bold;" readonly/>
+                        </td>
+                    </tr>
+                </tbody>    
+            </table>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Keyword</th>
+                        <th>Password</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" size="30" name="keyword1" id="keyword1" value="gmail" onkeyup="calc_pw(1)" />
+                        </td>
+                        <td>
+                            <input type="text" size="60" name="pw1" id="pw1"  />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" size="30" name="keyword2" id="keyword2" value="gmail" onkeyup="calc_pw(2)" />
+                        </td>
+                        <td>
+                            <input type="text" size="60" name="pw2" id="pw2" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" size="30" name="keyword3" id="keyword3" value="gmail" onkeyup="calc_pw(3)" />
+                        </td>
+                        <td>
+                            <input type="text" size="60" name="pw3" id="pw3" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" size="30" name="keyword4" id="keyword4" value="gmail" onkeyup="calc_pw(4)" />
+                        </td>
+                        <td>
+                            <input type="text" size="60" name="pw4" id="pw4" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" size="30" name="keyword5" id="keyword5" value="gmail" onkeyup="calc_pw(5)" />
+                        </td>
+                        <td>
+                            <input type="text" size="60" name="pw5" id="pw5" />
+                        </td>
+                    </tr>
+                </tbody>    
+            </table>
+        </div>
+    </div>    
 </body>
-
 </html>
